@@ -10,29 +10,78 @@ export default class extends Component {
         };
     }
 
-    addNewItem() {
-        console.log(this.state);
+    createItem(name, is_done = false) {
+        if ( !name ) {
+            throw new Error('Todo Item "name" property not a string or empty');
+        }
 
-        let name = prompt("What need to do?");
+        return {
+            id: Number(new Date()),
+            name,
+            is_done: Boolean(is_done),
+        };
+    }
+
+    addNewItem() {
+        let name = prompt("What you need to do?", "fuck you mom, bitch");
         if ( name ) {
             this.setState({
-               storage: this.state.storage.concat({
-                   title: name,
-                   is_done: false,
-               })
+               storage: this.state.storage.concat(
+                   this.createItem(name)
+               )
             });
         }
     }
 
+    toggleTodoDone(id) {
+        this.setState({
+            storage: this.state.storage.map((item) => {
+                let done = (id === item.id) ? !item.is_done : item.is_done;
+                return {...item, is_done: done};
+            })
+        });
+    }
+
     render() {
+        let outTodos;
+
+        if (this.state.storage.length) {
+            outTodos = this.state.storage.map((val, index) => {
+                return (
+                    <li key={index}
+                        className={ val.is_done ? 'todo-done' : '' }
+                        onDoubleClick={ (e) => {
+                            console.log(e);
+                            this.toggleTodoDone(val.id);
+                        } }
+                    >
+                        { val.name }
+                    </li>
+                );
+            });
+            outTodos = <ol>{outTodos}</ol>;
+        } else {
+            outTodos = (
+                <p className="text-center">No todo found :(</p>
+            );
+        }
+
         return (
             <div>
-                Here will be placed todo
+                <div>
+                    {outTodos}
+                </div>
+
+                <div>
+                    <p>
+                        <small>Double click on item to mark as <b>done</b></small>
+                    </p>
+                </div>
 
                 <button className="full-w"
                         onClick={ this.addNewItem.bind(this) }
                 >
-                    This is a button
+                    Add new
                 </button>
             </div>
         )
