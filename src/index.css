@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+button {
+  padding: 5px 15px;
+  font-size: 15px;
+  border: 0;
+}
+button.full-w {
+  margin-top: 10px;
+}
+
+.full-w {
+  width: 100%;
+}
