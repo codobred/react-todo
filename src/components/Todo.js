@@ -69,6 +69,10 @@ export default class extends Component {
         return (
             <div>
                 <div>
+                    <h2>This is a simple "ToDo" App</h2>
+                    <hr/>
+                </div>
+                <div>
                     {outTodos}
                 </div>
 
