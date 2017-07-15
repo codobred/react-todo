@@ -6,7 +6,19 @@ export default class extends Component {
         super(props);
 
         this.state = {
-            storage: [],
+            filterQuery: '',
+            storage: [
+                {
+                    id: Number(new Date()),
+                    name: 'Buy a meal',
+                    is_done: true,
+                },
+                {
+                    id: Number(new Date()),
+                    name: 'Drink a cup of coffee',
+                    is_done: false,
+                },
+            ],
         };
     }
 
@@ -42,20 +54,50 @@ export default class extends Component {
         });
     }
 
+    makeSearch(e) {
+        this.setState({
+            filterQuery: e.target.value
+        });
+    }
+
+    highlightCounted(name) {
+        let value = this.state.filterQuery;
+
+        if (!value.length) return name;
+
+        return (
+            <span>
+                {
+                    name.split(value)
+                        .reduce((prev, current, i) => {
+                            if (!i) {
+                                return [current];
+                            }
+                            return prev.concat(
+                                <b className="highlight-counted" key={value + current}>{ value }</b>,
+                                current
+                            );
+                        }, [])
+                }
+            </span>
+        )
+    }
+
     render() {
         let outTodos;
 
         if (this.state.storage.length) {
-            outTodos = this.state.storage.map((val, index) => {
+            outTodos = this.state.storage.filter((val) => {
+                return val.name.includes(this.state.filterQuery);
+            }).map((val, index) => {
                 return (
                     <li key={index}
                         className={ val.is_done ? 'todo-done' : '' }
-                        onDoubleClick={ (e) => {
-                            console.log(e);
+                        onDoubleClick={() => {
                             this.toggleTodoDone(val.id);
-                        } }
+                        }}
                     >
-                        { val.name }
+                        { this.highlightCounted(val.name) }
                     </li>
                 );
             });
@@ -71,6 +113,12 @@ export default class extends Component {
                 <div>
                     <h2>This is a simple "ToDo" App</h2>
                     <hr/>
+                </div>
+                <div>
+                    <p>
+                        Search by items
+                    </p>
+                    <input type="search" placeholder="Type to search" onChange={this.makeSearch.bind(this)}/>
                 </div>
                 <div>
                     {outTodos}

@@ -45,6 +45,10 @@ button.full-w {
   text-align: center;
 }
 
+.highlight-counted {
+  color: #ff9800;
+}
+
 .todo-done {
   text-decoration: line-through;
 }
