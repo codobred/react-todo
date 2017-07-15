@@ -20,6 +20,23 @@ export default class extends Component {
                 },
             ],
         };
+
+        this.searchInput = false;
+        this.focusSearchinput = (e) => {
+            if (e.keyCode === 114 || ((e.ctrlKey || e.metaKey) && e.keyCode === 70)) {
+                e.preventDefault();
+                console.log('Catch ctrl + f');
+                if (this.searchInput) this.searchInput.focus();
+            }
+        }
+    }
+
+    componentDidMount() {
+        window.addEventListener('keydown', this.focusSearchinput);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.focusSearchinput);
     }
 
     createItem(name, is_done = false) {
@@ -118,7 +135,10 @@ export default class extends Component {
                     <p>
                         Search by items
                     </p>
-                    <input type="search" placeholder="Type to search" onChange={this.makeSearch.bind(this)}/>
+                    <input type="search" placeholder="Type to search"
+                           onChange={this.makeSearch.bind(this)}
+                           ref={(input) => { this.searchInput = input; }}
+                    />
                 </div>
                 <div>
                     {outTodos}
